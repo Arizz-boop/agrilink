@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — AgriLink Rwanda</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ── VARIABLES ── */
+:root{
+  --cream:#f5f0e8;--cream-dark:#ede5d5;--sage-light:#c8d4b8;--sage:#8fa67a;
+  --sage-mid:#7a9468;--olive:#5a7a45;--olive-dark:#3d5c2e;--forest:#2e4a28;
+  --warm-white:#faf8f3;--text-dark:#1e2b1a;--text-mid:#4a5745;--text-light:#7a8e75;
+  --border:#d4ddc8;--shadow:rgba(46,74,40,0.12);--shadow-lg:rgba(46,74,40,0.22);
+  --glow-green:rgba(90,122,69,0.5);--glow-cream:rgba(245,240,232,0.6);
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --radius:12px;--radius-lg:20px;--radius-xl:32px;--radius-sm:6px;
+  --transition:0.25s cubic-bezier(0.4,0,0.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--warm-white);color:var(--text-dark);line-height:1.65;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block;object-fit:cover}
+a{color:inherit;text-decoration:none}
+input,textarea,select,button{font-family:inherit}
+
+/* ── AUTH LAYOUT ── */
+.auth-page{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+
+/* ── LEFT PANEL ── */
+.auth-left{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:56px 52px}
+.auth-left-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.auth-left-overlay{position:absolute;inset:0;background:linear-gradient(160deg,rgba(20,36,16,0.92) 0%,rgba(46,74,40,0.84) 100%);z-index:1}
+.auth-left>*:not(.auth-left-bg):not(.auth-left-overlay){position:relative;z-index:2}
+
+.auth-logo{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:1.2rem;color:var(--cream);margin-bottom:48px}
+.auth-logo img{width:34px;height:34px;border-radius:9px;object-fit:cover;border:2px solid rgba(255,255,255,0.2)}
+
+.auth-brand h2{font-family:var(--font-display);font-size:2.4rem;color:#fff;line-height:1.15;margin-bottom:14px}
+.auth-brand p{color:var(--sage-light);font-size:0.96rem;line-height:1.75;max-width:360px}
+
+.auth-stats{display:flex;gap:28px;margin-top:40px}
+.auth-stat strong{display:block;font-family:var(--font-display);font-size:1.7rem;color:#fff}
+.auth-stat span{font-size:0.75rem;color:var(--sage-light);text-transform:uppercase;letter-spacing:.06em}
+.auth-stat-div{width:1px;background:rgba(255,255,255,0.15)}
+
+.auth-testimonial{background:rgba(255,255,255,0.09);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-lg);padding:22px 26px}
+.auth-testimonial-photo{width:42px;height:42px;border-radius:50%;object-fit:cover;margin-bottom:14px;border:2px solid var(--sage-light)}
+.auth-testimonial blockquote{color:#fff;font-style:italic;font-size:0.92rem;line-height:1.65;margin-bottom:12px}
+.auth-testimonial cite{font-size:0.76rem;color:var(--sage-light)}
+
+/* ── RIGHT PANEL ── */
+.auth-right{background:var(--warm-white);padding:60px 52px;display:flex;flex-direction:column;justify-content:center;overflow-y:auto}
+.auth-right h1{font-family:var(--font-display);font-size:2rem;color:var(--forest);margin-bottom:6px}
+.auth-sub{color:var(--text-light);font-size:0.9rem;margin-bottom:36px}
+.auth-sub a{color:var(--olive);font-weight:500}
+
+/* ── ALERT ── */
+.alert{padding:13px 16px;border-radius:var(--radius);font-size:0.87rem;margin-bottom:24px;display:flex;align-items:center;gap:10px}
+.alert-info{background:rgba(52,152,219,0.08);border-left:3px solid #3498db;color:#1a5276}
+.alert-icon{width:18px;height:18px;flex-shrink:0}
+
+/* ── FORM ── */
+.form-group{margin-bottom:20px}
+.form-label{display:block;font-size:0.78rem;font-weight:500;color:var(--text-mid);margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em}
+.form-input{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:var(--radius);background:#fff;color:var(--text-dark);font-size:0.95rem;transition:all var(--transition);outline:none}
+.form-input:focus{border-color:var(--sage-mid);box-shadow:0 0 0 3px rgba(122,148,104,0.18),0 2px 8px var(--shadow)}
+.form-input::placeholder{color:var(--text-light)}
+
+.input-group{position:relative}
+.input-group .form-input{padding-right:46px}
+.input-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-light);padding:4px;display:flex;align-items:center;transition:color var(--transition)}
+.input-toggle:hover{color:var(--olive)}
+
+.flex-between{display:flex;align-items:center;justify-content:space-between}
+.forgot-link{font-size:0.84rem;color:var(--olive);transition:opacity var(--transition)}
+.forgot-link:hover{opacity:.75}
+.remember-label{display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer;color:var(--text-mid)}
+.remember-label input{accent-color:var(--olive)}
+
+/* ── GLOWING BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 24px;border-radius:var(--radius);font-weight:500;font-size:0.92rem;cursor:pointer;border:2px solid transparent;transition:all var(--transition);white-space:nowrap;text-decoration:none;width:100%}
+.btn-lg{padding:15px 32px;font-size:1rem}
+.btn-sm{padding:7px 16px;font-size:0.82rem;width:auto}
+
+/* Primary with glowing pulse */
+.btn-primary{background:linear-gradient(135deg,var(--olive) 0%,var(--olive-dark) 100%);color:#fff;box-shadow:0 4px 14px var(--shadow)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--glow-green),0 0 0 4px rgba(90,122,69,0.15);filter:brightness(1.07)}
+.btn-primary:active{transform:translateY(0)}
+
+@keyframes pulse-ring{
+  0%  {box-shadow:0 4px 14px var(--shadow),0 0 0 0 rgba(90,122,69,0.55)}
+  70% {box-shadow:0 4px 14px var(--shadow),0 0 0 14px rgba(90,122,69,0)}
+  100%{box-shadow:0 4px 14px var(--shadow),0 0 0 0 rgba(90,122,69,0)}
+}
+.btn-pulse{animation:pulse-ring 2.4s ease-out infinite}
+
+/* Outline */
+.btn-outline{background:transparent;color:var(--olive);border-color:var(--olive);width:auto}
+.btn-outline:hover{background:var(--olive);color:#fff;transform:translateY(-2px);box-shadow:0 6px 20px var(--glow-green)}
+
+/* ── DIVIDER ── */
+.divider{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--text-light);font-size:0.8rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── ALT LOGIN BUTTONS ── */
+.alt-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-alt{display:flex;align-items:center;justify-content:center;gap:9px;padding:11px 16px;border:1.5px solid var(--border);border-radius:var(--radius);background:#fff;font-size:0.87rem;font-weight:500;color:var(--text-mid);cursor:pointer;transition:all var(--transition);width:100%}
+.btn-alt img{width:22px;height:15px;border-radius:3px;object-fit:cover}
+.btn-alt svg{flex-shrink:0}
+.btn-alt:hover{border-color:var(--olive);color:var(--olive);background:rgba(90,122,69,0.04);transform:translateY(-1px)}
+
+/* ── TOS ── */
+.tos{margin-top:28px;font-size:0.76rem;color:var(--text-light);text-align:center;line-height:1.6}
+.tos a{color:var(--olive)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .auth-page{grid-template-columns:1fr}
+  .auth-left{display:none}
+  .auth-right{padding:40px 24px}
+}
+</style>
+</head>
+<body class="auth-page">
+
+<!-- ═══ LEFT PANEL ═══ -->
+<div class="auth-left">
+  <!-- Full bleed farm photo -->
+  <img class="auth-left-bg"
+    src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=1000&q=85&fit=crop"
+    alt="Rwandan farm fields at sunrise"/>
+  <div class="auth-left-overlay"></div>
+
+  <!-- TOP: Logo + headline -->
+  <div>
+    <a href="index.html" class="auth-logo">
+      <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=80&q=80&fit=crop" alt="AgriLink logo"/>
+      AgriLink <span style="font-style:italic;color:var(--sage-light)">Rwanda</span>
+    </a>
+
+    <div class="auth-brand">
+      <h2>Welcome back<br/>to the field.</h2>
+      <p>Connect with farmers, buyers and transporters across Rwanda — transparently and without middlemen.</p>
+
+      <div class="auth-stats">
+        <div class="auth-stat">
+          <strong>1,200+</strong>
+          <span>Farmers</span>
+        </div>
+        <div class="auth-stat-div"></div>
+        <div class="auth-stat">
+          <strong>340+</strong>
+          <span>Buyers</span>
+        </div>
+        <div class="auth-stat-div"></div>
+        <div class="auth-stat">
+          <strong>89+</strong>
+          <span>Transporters</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM: Testimonial card -->
+  <div class="auth-testimonial">
+    <img class="auth-testimonial-photo"
+      src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&q=80&fit=crop&crop=face"
+      alt="Kagabo Jean"/>
+    <blockquote>"AgriLink helped me sell my tomatoes directly to restaurants in Kigali. No more middlemen taking my profit."</blockquote>
+    <cite>— Kagabo Jean, Farmer · Musanze District</cite>
+  </div>
+</div>
+
+<!-- ═══ RIGHT PANEL ═══ -->
+<div class="auth-right">
+
+  <h1>Sign in</h1>
+  <p class="auth-sub">Don't have an account? <a href="register.html">Create one free →</a></p>
+
+  <!-- Info alert -->
+  <div class="alert alert-info">
+    <!-- Info icon SVG -->
+    <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="#1a6fa8" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="16" x2="12" y2="12"/>
+      <line x1="12" y1="8" x2="12.01" y2="8"/>
+    </svg>
+    Demo: use any email and password to explore the platform.
+  </div>
+
+  <!-- Email -->
+  <div class="form-group">
+    <label class="form-label">Email Address</label>
+    <input type="email" class="form-input" placeholder="you@example.com" autocomplete="email"/>
+  </div>
+
+  <!-- Password with toggle -->
+  <div class="form-group">
+    <label class="form-label">Password</label>
+    <div class="input-group">
+      <input type="password" class="form-input" id="pwdField" placeholder="Enter your password" autocomplete="current-password"/>
+      <button class="input-toggle" onclick="togglePwd()" title="Show password" type="button">
+        <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Remember me + Forgot -->
+  <div class="flex-between" style="margin-bottom:28px">
+    <label class="remember-label">
+      <input type="checkbox"/> Remember me
+    </label>
+    <a href="#" class="forgot-link">Forgot password?</a>
+  </div>
+
+  <!-- GLOWING SIGN IN BUTTON -->
+  <a href="dashboard.html">
+    <button class="btn btn-primary btn-lg btn-pulse" type="button">
+      <!-- Lock icon -->
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      Sign In
+    </button>
+  </a>
+
+  <div class="divider">or continue with</div>
+
+  <!-- Alternative login methods with real images -->
+  <div class="alt-btns">
+    <button class="btn-alt" type="button">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="5" y="2" width="14" height="20" rx="2"/>
+        <line x1="12" y1="18" x2="12.01" y2="18"/>
+      </svg>
+      Phone Number
+    </button>
+    <button class="btn-alt" type="button">
+      <img src="https://flagcdn.com/w40/rw.png" alt="Rwanda flag"/>
+      Irembo ID
+    </button>
+  </div>
+
+  <p class="tos">
+    By signing in you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+  </p>
+
+</div>
+
+<script>
+function togglePwd() {
+  const f = document.getElementById('pwdField');
+  const icon = document.getElementById('eyeIcon');
+  if (f.type === 'password') {
+    f.type = 'text';
+    // Eye-off icon
+    icon.innerHTML = `
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+      <line x1="1" y1="1" x2="23" y2="23"/>`;
+  } else {
+    f.type = 'password';
+    icon.innerHTML = `
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>`;
+  }
+}
+</script>
+</body>
+</html>
+
