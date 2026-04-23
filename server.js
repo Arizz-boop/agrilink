@@ -1,24 +1,24 @@
-const express = require('express');
-const path = require('path');
-require('dotenv').config();
+const express = require("express");
+const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-app.use(express.json());
-app.use(express.urlencoded({extended:true}))
+// Serve static files (CSS, JS, images)
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use(express.static('public'));
+// Route for homepage
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
-app.get(
-    "/", (req,res)=>{
-        res.sendFile(path.join(__dirname, "public", "index.html")
-    }
-);
+// Optional: handle other routes
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
-app.listen(
-    PORT, () =>{
-        console.log(`your frontend is running on http://localhost`)
-    }
-)
+// Port
+const PORT = process.env.PORT || 3000;
 
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
